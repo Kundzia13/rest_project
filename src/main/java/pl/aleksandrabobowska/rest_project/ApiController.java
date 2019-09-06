@@ -13,11 +13,13 @@ public class ApiController {
 
     @PutMapping("/{id}")
     public void createReport(@PathVariable String id,
-                             @RequestBody JSONObject requestObject) {
+                             @RequestBody JSONObject requestObject) throws Exception {
         log.info("PUT /{}/{}, content: {}", BASE_URL, id, requestObject.toString());
         String queryCharacter = requestObject.get("query_criteria_character_phrase").toString();
-        System.out.println(queryCharacter);
         String queryPlanet = requestObject.get("query_criteria_planet_name").toString();
-        System.out.println(queryPlanet);
+
+        String link = "https://swapi.co/api/people/?page=1";
+        String content = Connect.getUrlContents(link);
+
     }
 }
