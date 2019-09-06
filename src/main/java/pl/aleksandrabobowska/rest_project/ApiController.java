@@ -13,7 +13,7 @@ public class ApiController {
 
     @PutMapping("/{id}")
     public void createReport(@PathVariable String id,
-                             @RequestBody JSONObject requestObject) throws Exception {
+                             @RequestBody JSONObject requestObject) {
         log.info("PUT /{}/{}, content: {}", BASE_URL, id, requestObject.toString());
         String queryCharacter = requestObject.get("query_criteria_character_phrase").toString();
         String queryPlanet = requestObject.get("query_criteria_planet_name").toString();
