@@ -1,4 +1,4 @@
-package pl.aleksandrabobowska.rest_project;
+package pl.aleksandrabobowska.rest_project.util;
 
 public class Mappings {
 

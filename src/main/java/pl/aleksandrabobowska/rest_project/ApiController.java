@@ -3,16 +3,17 @@ package pl.aleksandrabobowska.rest_project;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.aleksandrabobowska.rest_project.db.Planet;
+import pl.aleksandrabobowska.rest_project.db.Character;
+import pl.aleksandrabobowska.rest_project.util.Mappings;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.nonNull;
-import static pl.aleksandrabobowska.rest_project.Mappings.BASE_URL;
-import static pl.aleksandrabobowska.rest_project.UrlPaths.JSON_FORMAT_SUFIX;
-import static pl.aleksandrabobowska.rest_project.UrlPaths.PLANETS_URL;
+import static pl.aleksandrabobowska.rest_project.util.Mappings.BASE_URL;
+import static pl.aleksandrabobowska.rest_project.util.UrlPaths.*;
 
 @Slf4j
 @RestController
@@ -23,20 +24,49 @@ public class ApiController {
     public void createReport(@PathVariable String id,
                              @RequestBody RequestObject requestObject) {
         log.info("PUT /{}/{}, content: {}", BASE_URL, id, requestObject.toString());
-        JSONObject askedPlanet = getAskedPlanet(requestObject);
+        Planet askedPlanet = getAskedPlanet(requestObject);
         System.out.println(askedPlanet);
+
+        List<Character> askedPeople = getAskedPeople(requestObject);
+        System.out.println(askedPeople);
+
     }
 
-    private JSONObject getAskedPlanet(RequestObject requestObject) {
-        JSONObject planetsJson = getJsonObject(PLANETS_URL);
+    private List<Character> getAskedPeople(RequestObject requestObject) {
+        List<Character> characterList = new ArrayList<>();
+        List<Character> list = new ArrayList<>();
+        JSONObject peopleJson = getJsonObject(PEOPLE_URL);
 
+        while (peopleJson.get("next").toString()!="null"){
+            JSONArray people = getObjects(peopleJson);
+            for (int i = 0; i < people.length(); i++) {
+                JSONObject person = people.getJSONObject(i);
+                if (person.get("name").toString().toLowerCase().contains(requestObject.getCharacterPhrase().toLowerCase())) {
+                    String characterName = person.get("name").toString();
+                    String characterURL = person.get("url").toString();
+                    int characterId = Integer.parseInt(characterURL.substring(28, characterURL.length()-1));
+                    Character character = new Character(characterId, characterName, characterURL);
+                   characterList.add(character);
+                }
+            }
+            peopleJson = getJsonObject(peopleJson.get("next").toString());
+        }
+        return characterList;
+    }
+
+    private Planet getAskedPlanet(RequestObject requestObject) {
+        JSONObject planetsJson = getJsonObject(PLANETS_URL);
 
         while (nonNull(planetsJson.get("next"))) {
             JSONArray planets = getObjects(planetsJson);
             for (int i = 0; i < planets.length(); i++) {
                 JSONObject planet = planets.getJSONObject(i);
                 if (planet.get("name").toString().equalsIgnoreCase(requestObject.getPlanetName())) {
-                    return planet;
+                    String planetName = planet.get("name").toString();
+                    String planetURL = planet.get("url").toString();
+                    int planetId = Integer.parseInt(planetURL.substring(29, planetURL.length()-1));
+                    Planet askedPlanet = new Planet(planetId, planetName, planetURL);
+                    return askedPlanet;
                 }
             }
             planetsJson = getJsonObject(planetsJson.getString("next"));
@@ -44,8 +74,8 @@ public class ApiController {
         return null;
     }
 
-    private JSONArray getObjects(JSONObject planetsJson) {
-        return planetsJson.getJSONArray("results");
+    private JSONArray getObjects(JSONObject jsonObject) {
+        return jsonObject.getJSONArray("results");
     }
 
     private JSONObject getJsonObject(String link) {
