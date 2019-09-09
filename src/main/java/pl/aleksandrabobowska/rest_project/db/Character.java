@@ -11,9 +11,10 @@ public class Character {
     private String characterURL;
     private List<Film> filmList;
 
-    public Character(int characterId, String characterName, String characterURL) {
+    public Character(int characterId, String characterName, String characterURL, List<Film> filmList) {
         this.characterId = characterId;
         this.characterName = characterName;
         this.characterURL = characterURL;
+        this.filmList = filmList;
     }
 }
