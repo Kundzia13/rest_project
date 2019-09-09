@@ -11,6 +11,7 @@ import pl.aleksandrabobowska.rest_project.util.Mappings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static pl.aleksandrabobowska.rest_project.util.Mappings.BASE_URL;
@@ -26,10 +27,9 @@ public class ApiController {
                              @RequestBody RequestObject requestObject) {
         log.info("PUT /{}/{}, content: {}", BASE_URL, id, requestObject.toString());
         Planet askedPlanet = getAskedPlanet(requestObject);
-        System.out.println(askedPlanet);
-
         List<Character> askedPeople = getAskedPeople(requestObject);
-        System.out.println(askedPeople);
+        List<Character> filtered = askedPeople.stream().filter(c->c.getHomeworld().equals(askedPlanet.getPlanetURL())).collect(Collectors.toList());
+        System.out.println(filtered);
 
     }
 
@@ -45,13 +45,14 @@ public class ApiController {
                     String characterName = person.get("name").toString();
                     String characterURL = person.get("url").toString();
                     int characterId = Integer.parseInt(characterURL.substring(28, characterURL.length() - 1));
+                    String homeworld = person.get("homeworld").toString();
                     List<Film> filmList=new ArrayList<>();
                     JSONArray results = person.getJSONArray("films");
                     for (int j = 0; j <results.length() ; j++) {
                       Film film = getAskedFilm(results.get(j).toString());
                         filmList.add(film);
                     }
-                    Character character = new Character(characterId, characterName, characterURL, filmList);
+                    Character character = new Character(characterId, characterName, characterURL,homeworld, filmList);
                     characterList.add(character);
                 }
             }
