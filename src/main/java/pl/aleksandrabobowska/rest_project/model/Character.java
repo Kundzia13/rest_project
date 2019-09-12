@@ -1,4 +1,4 @@
-package pl.aleksandrabobowska.rest_project.db;
+package pl.aleksandrabobowska.rest_project.model;
 
 import lombok.Data;
 

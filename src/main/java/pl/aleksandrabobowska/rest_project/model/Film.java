@@ -1,4 +1,4 @@
-package pl.aleksandrabobowska.rest_project.db;
+package pl.aleksandrabobowska.rest_project.model;
 
 import lombok.Data;
 
@@ -12,5 +12,10 @@ public class Film {
         this.filmId = filmId;
         this.filmName = filmName;
         this.filmURL = filmURL;
+    }
+
+    public Film(int filmId, String filmName) {
+        this.filmId = filmId;
+        this.filmName = filmName;
     }
 }

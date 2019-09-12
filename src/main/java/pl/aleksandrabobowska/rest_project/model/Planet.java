@@ -1,10 +1,10 @@
-package pl.aleksandrabobowska.rest_project.db;
+package pl.aleksandrabobowska.rest_project.model;
 
 import lombok.Data;
 
 @Data
 public class Planet {
-    private int planetId; // (int) planetURL.substring(29,30);
+    private int planetId;
     private String planetName;
     private String planetURL;
 

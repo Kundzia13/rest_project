@@ -3,10 +3,12 @@ package pl.aleksandrabobowska.rest_project;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.aleksandrabobowska.rest_project.db.Film;
-import pl.aleksandrabobowska.rest_project.db.Planet;
-import pl.aleksandrabobowska.rest_project.db.Character;
+import pl.aleksandrabobowska.rest_project.db.repository.ReportRepository;
+import pl.aleksandrabobowska.rest_project.model.Character;
+import pl.aleksandrabobowska.rest_project.model.Film;
+import pl.aleksandrabobowska.rest_project.model.Planet;
 import pl.aleksandrabobowska.rest_project.util.Mappings;
 
 import java.util.ArrayList;
@@ -22,16 +24,35 @@ import static pl.aleksandrabobowska.rest_project.util.UrlPaths.*;
 @RequestMapping(Mappings.BASE_URL)
 public class ApiController {
 
+    private ReportRepository reportRepository;
+
+    @Autowired
+    public ApiController(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
+    }
+
     @PutMapping("/{id}")
     public void createReport(@PathVariable String id,
-                             @RequestBody RequestObject requestObject) {
+                                               @RequestBody RequestObject requestObject) {
         log.info("PUT /{}/{}, content: {}", BASE_URL, id, requestObject.toString());
         Planet askedPlanet = getAskedPlanet(requestObject);
         List<Character> askedPeople = getAskedPeople(requestObject);
-        List<Character> filtered = askedPeople.stream().filter(c->c.getHomeworld().equals(askedPlanet.getPlanetURL())).collect(Collectors.toList());
-        System.out.println(filtered);
+        List<Character> filtered = askedPeople.stream().filter(c -> c.getHomeworld().
+                equals(askedPlanet.getPlanetURL())).collect(Collectors.toList());
+//        List<Report> reports = new ArrayList<>();
+//        for (int i = 0; i < filtered.size(); i++) {
+//            Report report = new Report(requestObject.getCharacterPhrase(), requestObject.getPlanetName(),
+//                    filtered.get(0).getFilmList(),
+//                    filtered.get(0).getCharacterId(), filtered.get(0).getCharacterName(),
+//                    askedPlanet.getPlanetId(), askedPlanet.getPlanetName());
+//            reports.add(report);
+//        }
 
+//        reportRepository.save(report);
+//        return ResponseEntity.ok().body(report);
     }
+
+
 
     private List<Character> getAskedPeople(RequestObject requestObject) {
         List<Character> characterList = new ArrayList<>();
@@ -46,13 +67,13 @@ public class ApiController {
                     String characterURL = person.get("url").toString();
                     int characterId = Integer.parseInt(characterURL.substring(28, characterURL.length() - 1));
                     String homeworld = person.get("homeworld").toString();
-                    List<Film> filmList=new ArrayList<>();
+                    List<Film> filmList = new ArrayList<>();
                     JSONArray results = person.getJSONArray("films");
-                    for (int j = 0; j <results.length() ; j++) {
-                      Film film = getAskedFilm(results.get(j).toString());
+                    for (int j = 0; j < results.length(); j++) {
+                        Film film = getAskedFilm(results.get(j).toString());
                         filmList.add(film);
                     }
-                    Character character = new Character(characterId, characterName, characterURL,homeworld, filmList);
+                    Character character = new Character(characterId, characterName, characterURL, homeworld, filmList);
                     characterList.add(character);
                 }
             }
@@ -92,7 +113,7 @@ public class ApiController {
                     String filmName = film.get("title").toString();
                     String filmURL = film.get("url").toString();
                     int filmId = Integer.parseInt(filmURL.substring(27, filmURL.length() - 1));
-                    Film askedFilm = new Film(filmId, filmName, filmURL);
+                    Film askedFilm = new Film(filmId, filmName);
                     return askedFilm;
                 }
             }
