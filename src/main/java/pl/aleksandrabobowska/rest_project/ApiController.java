@@ -10,14 +10,17 @@ import pl.aleksandrabobowska.rest_project.db.Response;
 import pl.aleksandrabobowska.rest_project.db.entities.CharacterEntity;
 import pl.aleksandrabobowska.rest_project.db.entities.FilmEntity;
 import pl.aleksandrabobowska.rest_project.db.entities.Report;
+import pl.aleksandrabobowska.rest_project.db.repository.CharacterRepository;
+import pl.aleksandrabobowska.rest_project.db.repository.FilmRepository;
 import pl.aleksandrabobowska.rest_project.db.repository.ReportRepository;
 import pl.aleksandrabobowska.rest_project.model.Character;
 import pl.aleksandrabobowska.rest_project.model.Planet;
 import pl.aleksandrabobowska.rest_project.util.Mappings;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -31,9 +34,17 @@ public class ApiController {
 
     private ReportRepository reportRepository;
 
+    private FilmRepository filmRepository;
+
+    private CharacterRepository characterRepository;
+
     @Autowired
-    public ApiController(ReportRepository reportRepository) {
+    public ApiController(ReportRepository reportRepository,
+                         FilmRepository filmRepository,
+                         CharacterRepository characterRepository) {
         this.reportRepository = reportRepository;
+        this.filmRepository = filmRepository;
+        this.characterRepository = characterRepository;
     }
 
     @PutMapping("/{id}")

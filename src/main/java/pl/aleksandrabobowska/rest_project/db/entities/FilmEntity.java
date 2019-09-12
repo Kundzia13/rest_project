@@ -1,5 +1,6 @@
 package pl.aleksandrabobowska.rest_project.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class FilmEntity {
     @Column(name = "film_name")
     private String filmName;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Report report;
 
