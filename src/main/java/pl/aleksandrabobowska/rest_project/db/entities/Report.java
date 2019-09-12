@@ -14,7 +14,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class Report {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
     private Long id;
     @Column(name = "query_criteria_character_phrase")

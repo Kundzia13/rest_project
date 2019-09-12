@@ -15,10 +15,9 @@ import pl.aleksandrabobowska.rest_project.model.Character;
 import pl.aleksandrabobowska.rest_project.model.Planet;
 import pl.aleksandrabobowska.rest_project.util.Mappings;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -38,7 +37,7 @@ public class ApiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Report> createReport(@PathVariable String id,
+    public ResponseEntity<Report> createReport(@PathVariable Long id,
                                                @RequestBody RequestObject requestObject) {
         log.info("PUT /{}/{}, content: {}", BASE_URL, id, requestObject.toString());
         Planet askedPlanet = getAskedPlanet(requestObject);
@@ -50,7 +49,7 @@ public class ApiController {
                 requestObject.getPlanetName(),
                 films, characters,
                 askedPlanet.getPlanetId(), askedPlanet.getPlanetName());
-
+        report.setId(id);
         reportRepository.save(report);
         return ResponseEntity.ok().body(report);
     }
@@ -69,6 +68,22 @@ public class ApiController {
         log.info("GET /{}/{}", BASE_URL, id);
         Report report = reportRepository.findById(id).get();
         return report;
+    }
+
+    @DeleteMapping
+    public void deleteAllReports() {
+        log.info("GET /{}", BASE_URL);
+        List<Report> reportsList = new ArrayList<>();
+        reportRepository.findAll().forEach(e -> reportsList.add(e));
+        reportRepository.deleteAll();
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void deleteReportById(@PathVariable Long id) {
+        log.info("GET /{}/{}", BASE_URL, id);
+        Report report = reportRepository.findById(id).get();
+        reportRepository.delete(report);
     }
 
 

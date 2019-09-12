@@ -10,8 +10,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class FilmEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     @Column(name = "film_id")
     private int filmId;
     @Column(name = "film_name")
