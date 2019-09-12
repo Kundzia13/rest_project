@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -14,24 +16,24 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
-    private int id;
+    private Long id;
     @Column(name = "query_criteria_character_phrase")
     private String queryCharacterPhrase;
     @Column(name = "query_criteria_planet_name")
     private String queryPlanetName;
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
     @Column(name = "films")
-    private List<Film> filmList = new ArrayList<>();
+    private Set<FilmEntity> filmList = new HashSet<>();
     @Column(name = "characters")
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
-    private List<Character> characterList= new ArrayList<>();
+    private List<CharacterEntity> characterList= new ArrayList<>();
     @Column(name = "planet_id")
     private int planetId;
     @Column(name = "planet_name")
     private String planetName;
 
     public Report(String queryCharacterPhrase, String queryPlanetName,
-                  List<Film> filmList, List<Character> characterList, int planetId, String planetName) {
+                  Set<FilmEntity> filmList, List<CharacterEntity> characterList, int planetId, String planetName) {
         this.queryCharacterPhrase = queryCharacterPhrase;
         this.queryPlanetName = queryPlanetName;
         this.filmList = filmList;

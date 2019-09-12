@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-public class Character {
+public class CharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,4 +20,8 @@ public class Character {
     @ManyToOne(cascade = CascadeType.ALL)
     private Report report;
 
+    public CharacterEntity(int characterId, String characterName) {
+        this.characterId = characterId;
+        this.characterName = characterName;
+    }
 }

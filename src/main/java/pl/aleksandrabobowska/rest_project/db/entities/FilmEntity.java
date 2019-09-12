@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-public class Film {
+public class FilmEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -19,4 +19,9 @@ public class Film {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Report report;
+
+    public FilmEntity(int filmId, String filmName) {
+        this.filmId = filmId;
+        this.filmName = filmName;
+    }
 }
