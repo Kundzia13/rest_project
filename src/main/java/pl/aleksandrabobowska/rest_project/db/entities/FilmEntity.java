@@ -2,7 +2,9 @@ package pl.aleksandrabobowska.rest_project.db.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -17,7 +19,7 @@ public class FilmEntity {
     private String filmName;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Report report;
 
     public FilmEntity(int filmId, String filmName) {

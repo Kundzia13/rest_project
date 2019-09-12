@@ -54,13 +54,14 @@ public class ApiController {
         Planet askedPlanet = getAskedPlanet(requestObject);
         List<Character> askedPeople = getAskedPeople(requestObject);
         List<Character> filtered = getFiltered(askedPeople, askedPlanet);
-        List<CharacterEntity> characters = createCharactersList(filtered);
+        Set<CharacterEntity> characters = createCharactersList(filtered);
         Set<FilmEntity> films = createFilmSet(filtered);
         Report report = new Report(requestObject.getCharacterPhrase(),
                 requestObject.getPlanetName(),
                 films, characters,
                 askedPlanet.getPlanetId(), askedPlanet.getPlanetName());
         report.setId(id);
+
         reportRepository.save(report);
         return ResponseEntity.ok().body(report);
     }
@@ -173,8 +174,8 @@ public class ApiController {
         return filtered;
     }
 
-    private List<CharacterEntity> createCharactersList(List<Character> list) {
-        List<CharacterEntity> characters = new ArrayList<>();
+    private Set<CharacterEntity> createCharactersList(List<Character> list) {
+        Set<CharacterEntity> characters = new HashSet<>();
         for (int i = 0; i < list.size(); i++) {
             CharacterEntity character = new CharacterEntity(
                     list.get(i).getCharacterId(), list.get(i).getCharacterName());
